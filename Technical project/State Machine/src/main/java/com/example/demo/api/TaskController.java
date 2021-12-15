@@ -5,12 +5,17 @@ import com.example.demo.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.awt.*;
+import java.util.Optional;
 import java.util.List;
+
 
 @RequestMapping("/api/v1/task")
 @RestController
 public class TaskController {
-    private final TaskService taskService;
+
+
+    private TaskService taskService;
 
     @Autowired
     public TaskController(TaskService taskService) {
@@ -18,13 +23,27 @@ public class TaskController {
     }
 
     @PostMapping
-    public void addTask(@RequestBody Task task)
+    public List<Task> addTask(@RequestBody Task task)
     {
-        taskService.addTask(task);
+        return taskService.addTask(task);
     }
 
-    @GetMapping
-    public List<Task> getAllTasks(){
-        return taskService.getAllTasks();
+    @GetMapping(path = "{id}")
+    public Optional<Task> getTaskById(@PathVariable("id") Long id)
+    {
+        return taskService.getTaskByID(id);
+    }
+
+
+    @DeleteMapping(path = "{id}")
+    public List<Task> removeTask(@PathVariable("id") Long id)
+    {
+        return taskService.removeTask(id);
+    }
+
+    @PutMapping(path = "{id}")
+    public Task updateTask(@PathVariable("id") Long id,@RequestBody Task task)
+    {
+        return taskService.updateTask(id, task);
     }
 }
